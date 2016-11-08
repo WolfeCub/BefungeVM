@@ -2,6 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+char* ptr_to_xy(char *list, int row, int col) {
+  char *ptr = list;
+  int i;
+  for (i = 0; i < row; i++)
+    ptr = strchr(ptr, '\n');
+
+  return (ptr + col);
+}
+
 int main(int argc, char **argv) {
   if (argc < 2)
     fprintf(stderr, "Not enough arguments");
@@ -32,10 +41,9 @@ int main(int argc, char **argv) {
   }
 
   fclose(fd);
-  if (line)
-    free(line);
+  free(line);
 
-  printf("%s", list);
+  printf("%s\n", list);
 
   return 0;
 }
