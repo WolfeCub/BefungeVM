@@ -11,6 +11,11 @@ char* ptr_to_xy(char *list, int row, int col) {
   return (ptr + col);
 }
 
+char* process_char(char *list, char *current_pos) {
+  printf("%c\n", *current_pos);
+  return current_pos;
+}
+
 int main(int argc, char **argv) {
   if (argc < 2)
     fprintf(stderr, "Not enough arguments");
@@ -44,6 +49,12 @@ int main(int argc, char **argv) {
   free(line);
 
   printf("%s\n", list);
+
+  char *current_pos = ptr_to_xy(list, 0, 0);
+
+  while (1) {
+    current_pos = process_char(list, current_pos);
+  }
 
   return 0;
 }
