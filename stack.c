@@ -52,13 +52,9 @@ int Stack_peek(Stack *s) {
     return s->data[s->top];
 }
 
-// For testing
-//int main(int argc, char **argv) {
-//Stack *stk = malloc(sizeof(stk));
-//
-//Stack_push(stk, 7);
-//printf("%d\n", Stack_peek(stk));
-//printf("%d\n", Stack_peek(stk));
-//
-//return 0;
-//}
+void Stack_print(Stack *s) {
+  int i;
+  for (i = 1; i <= s->top; i++)
+    printf("%d ", s->data[i]);
+  printf("\n");
+}

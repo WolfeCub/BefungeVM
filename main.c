@@ -20,7 +20,7 @@ void double_list() {
   char *ptr = list;
   char *itr = new;
 
-  memset(new, 'x', new_dim*new_dim);
+  memset(new, ' ', new_dim*new_dim);
 
   int i;
   for (i = 0; i < dim; i++) {
@@ -34,170 +34,200 @@ void double_list() {
 }
 
 void move() {
-  if (current_direction == RIGHT)
-    ccol += 1;
-  else if (current_direction == LEFT)
-    ccol -= 1;
-  else if (current_direction == UP)
-    crow -= 1;
-  else if (current_direction == DOWN)
-    crow += 1;
+  if (current_direction == RIGHT) {
+    if (ccol + 1 >= dim)
+      ccol = 0;
+    else
+      ccol += 1;
+  }
+  else if (current_direction == LEFT) {
+    if (ccol - 1 < 0)
+      ccol = dim-1;
+    else
+      ccol -= 1;
+  }
+  else if (current_direction == UP) {
+    if (crow - 1 < 0)
+      crow = dim-1;
+    else
+      crow -= 1;
+  }
+  else if (current_direction == DOWN) {
+    if (crow + 1 >= dim)
+      crow = 0;
+    else
+      crow += 1;
+  }
 } 
 
 int process() {
   char current = list[pos(crow, ccol)];
   int a, b;
 
-  if (current == ADD) {
-    a = Stack_pop(stk);
-    b = Stack_pop(stk);
+  //printf("dim: %d\t", dim);
+  //printf("row: %d, col: %d\n", crow, ccol);
 
-    Stack_push(stk, a+b);
-    move();
-  } else if (current == SUB) {
-    a = Stack_pop(stk);
-    b = Stack_pop(stk);
+  //Stack_print(stk);
+  //printf("\n");
+  //printf("%c", current);
 
-    Stack_push(stk, a-b);
-    move();
-  } else if (current == MULT) {
-    a = Stack_pop(stk);
-    b = Stack_pop(stk);
-
-    Stack_push(stk, a*b);
-    move();
-  } else if (current == DIV) {
-    a = Stack_pop(stk);
-    b = Stack_pop(stk);
-
-    Stack_push(stk, b/a);
-    move();
-  } else if (current == MOD) {
-    a = Stack_pop(stk);
-    b = Stack_pop(stk);
-
-    Stack_push(stk, b%a);
-    move();
-  } else if (current == NOT) {
-    a = Stack_pop(stk);
-
-    if (a == 0)
-      Stack_push(stk, 1);
-    else
-      Stack_push(stk, 0);
-    move();
-  } else if (current == GT) {
-    a = Stack_pop(stk);
-    b = Stack_pop(stk);
-
-    if (b > a)
-      Stack_push(stk, 1);
-    else
-      Stack_push(stk, 0);
-
-    move();
-  } else if (current == PCR) {
-    current_direction = RIGHT;
-    move();
-  } else if (current == PCL) {
-    current_direction = LEFT;
-    move();
-  } else if (current == PCU) {
-    current_direction = UP;
-    move();
-  } else if (current == PCD) {
-    current_direction = DOWN;
-    move();
-  } else if (current == PCRAND) {
-    a = 0 - ((rand() % 4) + 96);
-    current_direction = a;
-    move();
-  } else if (current == HIF) {
-    a = Stack_pop(stk);
-
-    if (a == 0)
-      current_direction = RIGHT;
-    else
-      current_direction = LEFT;
-    move();
-  } else if (current == VIF) {
-    a = Stack_pop(stk);
-
-    if (a == 0)
-      current_direction = DOWN;
-    else
-      current_direction = UP;
-    move();
-  } else if (current == STRING) {
+  if (current == STRING) {
     string_mode ^= 1;
     move();
-  } else if (current == PEEK) {
-    Stack_push(stk, Stack_peek(stk));
-    move();
-  } else if (current == SWAP) {
-    a = Stack_pop(stk);
-    b = Stack_pop(stk);
-    Stack_push(stk, a);
-    Stack_push(stk, b);
-    move();
-  } else if (current == POPR) {
-    Stack_pop(stk);
-    move();
-  } else if (current == POPI) {
-    printf("%d", Stack_pop(stk));
-    move();
-  } else if (current == POPC) {
-    char ch = Stack_pop(stk);
-    printf("%c", ch);
-    move();
-  } else if (current == BRIDGE) {
-    move();
-  } else if (current == GET && string_mode == 0) {
-    a = Stack_pop(stk);
-    b = Stack_pop(stk);
+    return 0;
+  } 
 
-    if (a >= dim-1 || b >= dim-1)
-      Stack_push(stk, 0);
-    else
-      Stack_push(stk, pos(b, a));
-    move();
-  } else if (current == PUT && string_mode == 0) {
-    int c;
-    a = Stack_pop(stk);
-    b = Stack_pop(stk);
-    c = Stack_pop(stk);
+  if (string_mode == 0) {
+    if (current == ADD) {
+      a = Stack_pop(stk);
+      b = Stack_pop(stk);
 
-    while (a >= dim || b >= dim)
-      double_list();
+      Stack_push(stk, a+b);
+      move();
+    } else if (current == SUB) {
+      a = Stack_pop(stk);
+      b = Stack_pop(stk);
 
-    list[pos(b,a)] = c;
-    move();
-  } else if (current == READI) {
-    scanf(" %d", &a);
-    getchar();
+      Stack_push(stk, a-b);
+      move();
+    } else if (current == MULT) {
+      a = Stack_pop(stk);
+      b = Stack_pop(stk);
 
-    Stack_push(stk, a);
+      Stack_push(stk, a*b);
+      move();
+    } else if (current == DIV) {
+      a = Stack_pop(stk);
+      b = Stack_pop(stk);
 
-    move();
-  } else if (current == READC) {
-    char ch;
-    scanf(" %c", &ch);
-    getchar();
-    a = ch;
-    Stack_push(stk, a);
+      Stack_push(stk, b/a);
+      move();
+    } else if (current == MOD) {
+      a = Stack_pop(stk);
+      b = Stack_pop(stk);
 
-    move();
-  } else if (current == NOOP) {
-    move();
+      Stack_push(stk, b%a);
+      move();
+    } else if (current == NOT) {
+      a = Stack_pop(stk);
+
+      if (a == 0)
+        Stack_push(stk, 1);
+      else
+        Stack_push(stk, 0);
+      move();
+    } else if (current == GT) {
+      a = Stack_pop(stk);
+      b = Stack_pop(stk);
+
+      if (b > a)
+        Stack_push(stk, 1);
+      else
+        Stack_push(stk, 0);
+
+      move();
+    } else if (current == PCR) {
+      current_direction = RIGHT;
+      move();
+    } else if (current == PCL) {
+      current_direction = LEFT;
+      move();
+    } else if (current == PCU) {
+      current_direction = UP;
+      move();
+    } else if (current == PCD) {
+      current_direction = DOWN;
+      move();
+    } else if (current == PCRAND) {
+      a = 0 - ((rand() % 4) + 96);
+      current_direction = a;
+      move();
+    } else if (current == HIF) {
+      a = Stack_pop(stk);
+
+      if (a == 0)
+        current_direction = RIGHT;
+      else
+        current_direction = LEFT;
+      move();
+    } else if (current == VIF) {
+      a = Stack_pop(stk);
+
+      if (a == 0)
+        current_direction = DOWN;
+      else
+        current_direction = UP;
+      move();
+    } else if (current == PEEK) {
+      Stack_push(stk, Stack_peek(stk));
+      move();
+    } else if (current == SWAP) {
+      a = Stack_pop(stk);
+      b = Stack_pop(stk);
+      Stack_push(stk, a);
+      Stack_push(stk, b);
+      move();
+    } else if (current == POPR) {
+      Stack_pop(stk);
+      move();
+    } else if (current == POPI) {
+      printf("%d", Stack_pop(stk));
+      move();
+    } else if (current == POPC) {
+      char ch = Stack_pop(stk);
+      printf("%c", ch);
+      move();
+    } else if (current == BRIDGE) {
+      move();
+      move();
+    } else if (current == GET && string_mode == 0) {
+      a = Stack_pop(stk);
+      b = Stack_pop(stk);
+
+      if (a >= dim-1 || b >= dim-1)
+        Stack_push(stk, 0);
+      else
+        Stack_push(stk, pos(b, a));
+      move();
+    } else if (current == PUT && string_mode == 0) {
+      int c;
+      a = Stack_pop(stk);
+      b = Stack_pop(stk);
+      c = Stack_pop(stk);
+
+      while (a >= dim || b >= dim)
+        double_list();
+
+      list[pos(b,a)] = c;
+      move();
+    } else if (current == READI) {
+      scanf(" %d", &a);
+      getchar();
+
+      Stack_push(stk, a);
+
+      move();
+    } else if (current == READC) {
+      char ch;
+      scanf(" %c", &ch);
+      getchar();
+      a = ch;
+      Stack_push(stk, a);
+
+      move();
+    } else if (current == NOOP) {
+      move();
+    }
+    else if (current == END) {
+      return -1;
+    } else {
+      Stack_push(stk, current-48);
+      move();
+    }
   }
-  else if (current == END) {
-    return -1;
-  } else if (string_mode == 1) {
+  else if (string_mode == 1) {
     a = current;
     Stack_push(stk, a);
-    move();
-  } else {
-    Stack_push(stk, current-48);
     move();
   }
 
@@ -226,7 +256,7 @@ int main(int argc, char **argv) {
   stk = malloc(sizeof(stk));
   dim = 8;
   list = malloc(dim*dim);
-  memset(list, 'x', dim*dim);
+  //memset(list, 'x', dim*dim);
 
   if ((fd = fopen(argv[1], "r")) == NULL) {
     perror(argv[1]);
