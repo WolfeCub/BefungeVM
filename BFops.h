@@ -24,3 +24,4 @@
 #define READI '&'
 #define READC '~'
 #define END '@'
+#define NOOP ' '
