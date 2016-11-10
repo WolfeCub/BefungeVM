@@ -67,7 +67,7 @@ int process() {
   //printf("dim: %d\t", dim);
   //printf("row: %d, col: %d\n", crow, ccol);
 
-  //Stack_print(stk);
+  Stack_print(stk);
   //printf("\n");
   //printf("%c", current);
 
@@ -88,7 +88,7 @@ int process() {
       a = Stack_pop(stk);
       b = Stack_pop(stk);
 
-      Stack_push(stk, a-b);
+      Stack_push(stk, b-a);
       move();
     } else if (current == MULT) {
       a = Stack_pop(stk);
