@@ -25,3 +25,8 @@
 #define READC '~'
 #define END '@'
 #define NOOP ' '
+
+#define LEFT -99
+#define RIGHT -98
+#define UP -97
+#define DOWN -96
