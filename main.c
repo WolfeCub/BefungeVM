@@ -3,6 +3,33 @@
 #include <string.h>
 #include "stack.c"
 
+#define ADD '+'
+#define SUB '-'
+#define MULT '*'
+#define DIV '/'
+#define MOD '%'
+#define NOT '!'
+#define GT  '`'
+#define PCR '>'
+#define PCL '<'
+#define PCU '^'
+#define PCD 'v'
+#define PCRAND '?'
+#define HIF '_'
+#define VIF '|'
+#define STRING '"'
+#define PEEK ':'
+#define SWAP '\\'
+#define POPR '$'
+#define POPI '.'
+#define POPC ','
+#define BRIDGE '#'
+#define GET 'g'
+#define PUT 'p'
+#define READI '&'
+#define READC '~'
+#define END '@'
+
 #define left -99
 #define right -98
 #define up -97
@@ -28,32 +55,6 @@ void move(char *list, char *current_post) {
 char* process_char(char *list, char *current_pos) {
   printf("%c\n", *current_pos);
 
-  if (*current_pos == '+') {
-    int var1, var2;
-    var1 = Stack_pop(stk);
-    var2 = Stack_pop(stk);
-    Stack_push(stk, (var1 + var2));
-  } else if (*current_pos == '-') {
-    int var1, var2;
-    var1 = Stack_pop(stk);
-    var2 = Stack_pop(stk);
-    Stack_push(stk, (var1 - var2));
-  } else if (*current_pos == '*') {
-    int var1, var2;
-    var1 = Stack_pop(stk);
-    var2 = Stack_pop(stk);
-    Stack_push(stk, (var1 * var2));
-  } else if (*current_pos == '/') {
-    int var1, var2;
-    var1 = Stack_pop(stk);
-    var2 = Stack_pop(stk);
-    Stack_push(stk, (var2 / var1));
-  }
-
-
-  else if (*current_pos == '$') {
-    Stack_pop(stk);
-  }
   return current_pos;
 }
 
