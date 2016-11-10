@@ -48,26 +48,38 @@ int main(int argc, char **argv) {
   if (argc < 2)
     fprintf(stderr, "Not enough arguments");
 
+  char *line = NULL;
+  size_t len = 0;
+  ssize_t read;
   FILE *fd;
   stk = malloc(sizeof(stk));
-  dim = 2;
-  list = malloc(sizeof(char)*4);
+  dim = 8;
+  list = malloc(dim*dim);
+  memset(list, 'x', dim*dim);
 
   if ((fd = fopen(argv[1], "r")) == NULL) {
     perror(argv[1]);
     return 1;
   }
 
-  list[0] = 'a';
-  list[1] = 'b';
-  list[2] = 'c';
-  list[3] = 'd';
+  int i = 0;
+  while ((read = getline(&line, &len, fd)) != -1) {
+    if (line[read-1] == '\n') {
+      line[read-1] = '\0';
+      read -= 1;
+    }
 
-  //print_grid();
-  double_list();
+    while (read > dim)
+      double_list();
+
+    strncpy((list + dim*i), line, read);
+    i++;
+  }
+
+  fclose(fd);
+  free(line);
+
   print_grid();
-
-  printf("%ld\n", sizeof(list));
 
   return 0;
 }
