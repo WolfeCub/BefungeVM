@@ -66,8 +66,7 @@ int process() {
 
   //printf("dim: %d\t", dim);
   //printf("row: %d, col: %d\n", crow, ccol);
-
-  Stack_print(stk);
+  //Stack_print(stk);
   //printf("\n");
   //printf("%c", current);
 
