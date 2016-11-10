@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "stack.c"
+#include "BFops.h"
 
 #define left -99
 #define right -98
@@ -9,26 +10,38 @@
 #define down -96
 
 Stack *stk;
+char *list;
 int current_direction = left;
 int crow = 0, ccol = 0;
+int dim;
 
-char* ptr_to_xy(char *list, int row, int col) {
-  char *ptr = list;
+void print_grid() {
   int i;
-  for (i = 0; i < row; i++)
-    ptr = strchr(ptr, '\n');
+  for (i = 0; i < dim*dim; i++) {
+    printf("%c", list[i]);
 
-  return (ptr + col);
+    if (((i + 1) % dim) == 0)
+      printf("\n");
+  }
 }
 
-void move(char *list, char *current_post) {
-  if (current_direction == left) {
+void double_list() {
+  int new_dim = dim * 2;
+  char *new = malloc(new_dim*new_dim);
+  char *ptr = list;
+  char *itr = new;
+
+  memset(new, 'x', new_dim*new_dim);
+
+  int i;
+  for (i = 0; i < dim; i++) {
+    memcpy(itr, ptr, dim);
+    ptr += dim;
+    itr += new_dim;
   }
-
-char* process_char(char *list, char *current_pos) {
-  printf("%c\n", *current_pos);
-
-  return current_pos;
+   
+  dim = new_dim;
+  list = new;
 }
 
 int main(int argc, char **argv) {
@@ -36,38 +49,25 @@ int main(int argc, char **argv) {
     fprintf(stderr, "Not enough arguments");
 
   FILE *fd;
-  int size;
-  char *list, *itr;
   stk = malloc(sizeof(stk));
+  dim = 2;
+  list = malloc(sizeof(char)*4);
 
   if ((fd = fopen(argv[1], "r")) == NULL) {
     perror(argv[1]);
     return 1;
   }
 
-  fseek(fd, 0L, SEEK_END);
-  size = ftell(fd);
-  list = malloc(sizeof(char) * size);
-  rewind(fd);
+  list[0] = 'a';
+  list[1] = 'b';
+  list[2] = 'c';
+  list[3] = 'd';
 
-  itr = list;
+  //print_grid();
+  double_list();
+  print_grid();
 
-  char *line = NULL;
-  size_t len = 0;
-  ssize_t read;
-
-  while ((read = getline(&line, &len, fd)) != -1) {
-    strncpy(itr, line, read);
-    itr += read;
-  }
-
-  fclose(fd);
-  free(line);
-
-  char *current_pos = ptr_to_xy(list, 0, 0);
-  while (1) {
-    current_pos = process_char(list, current_pos, crow, ccol);
-  }
+  printf("%ld\n", sizeof(list));
 
   return 0;
 }
