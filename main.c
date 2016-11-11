@@ -285,6 +285,7 @@ int ignore_fn() {
 }
 
 void init_functions() {
+  int i;
 
   functions[0]  = (void *)(intptr_t)noop_fn;
   functions[1]  = (void *)(intptr_t)not_fn;
@@ -300,16 +301,8 @@ void init_functions() {
   functions[14] = (void *)(intptr_t)popi_fn;
   functions[15] = (void *)(intptr_t)div_fn;
 
-  functions[16] = (void *)(intptr_t)num_fn;
-  functions[17] = (void *)(intptr_t)num_fn;
-  functions[18] = (void *)(intptr_t)num_fn;
-  functions[19] = (void *)(intptr_t)num_fn;
-  functions[20] = (void *)(intptr_t)num_fn;
-  functions[21] = (void *)(intptr_t)num_fn;
-  functions[22] = (void *)(intptr_t)num_fn;
-  functions[23] = (void *)(intptr_t)num_fn;
-  functions[24] = (void *)(intptr_t)num_fn;
-  functions[25] = (void *)(intptr_t)num_fn;
+  for (i = 16; i <= 25; i++)
+    functions[i] = (void *)(intptr_t)num_fn;
 
   functions[26] = (void *)(intptr_t)dup_fn;
   functions[27] = (void *)(intptr_t)ignore_fn;
@@ -318,60 +311,16 @@ void init_functions() {
   functions[31] = (void *)(intptr_t)pcrand_fn;
   functions[32] = (void *)(intptr_t)end_fn;
 
-  functions[33] = (void *)(intptr_t)str_push_fn();
-  functions[34] = (void *)(intptr_t)str_push_fn();
-  functions[35] = (void *)(intptr_t)str_push_fn();
-  functions[36] = (void *)(intptr_t)str_push_fn();
-  functions[37] = (void *)(intptr_t)str_push_fn();
-  functions[38] = (void *)(intptr_t)str_push_fn();
-  functions[39] = (void *)(intptr_t)str_push_fn();
-  functions[40] = (void *)(intptr_t)str_push_fn();
-  functions[41] = (void *)(intptr_t)str_push_fn();
-  functions[42] = (void *)(intptr_t)str_push_fn();
-  functions[43] = (void *)(intptr_t)str_push_fn();
-  functions[44] = (void *)(intptr_t)str_push_fn();
-  functions[45] = (void *)(intptr_t)str_push_fn();
-  functions[46] = (void *)(intptr_t)str_push_fn();
-  functions[47] = (void *)(intptr_t)str_push_fn();
-  functions[48] = (void *)(intptr_t)str_push_fn();
-  functions[49] = (void *)(intptr_t)str_push_fn();
-  functions[50] = (void *)(intptr_t)str_push_fn();
-  functions[51] = (void *)(intptr_t)str_push_fn();
-  functions[52] = (void *)(intptr_t)str_push_fn();
-  functions[53] = (void *)(intptr_t)str_push_fn();
-  functions[54] = (void *)(intptr_t)str_push_fn();
-  functions[55] = (void *)(intptr_t)str_push_fn();
-  functions[56] = (void *)(intptr_t)str_push_fn();
-  functions[57] = (void *)(intptr_t)str_push_fn();
-  functions[58] = (void *)(intptr_t)str_push_fn();
+  for (i = 33; i <= 58; i++)
+    functions[i] = (void *)(intptr_t)str_push_fn();
   
   functions[60] = (void *)(intptr_t)swap_fn;
   functions[62] = (void *)(intptr_t)pcu_fn;
   functions[63] = (void *)(intptr_t)hif_fn;
   functions[64] = (void *)(intptr_t)gt_fn;
 
-  functions[65] = (void *)(intptr_t)str_push_fn();
-  functions[66] = (void *)(intptr_t)str_push_fn();
-  functions[67] = (void *)(intptr_t)str_push_fn();
-  functions[68] = (void *)(intptr_t)str_push_fn();
-  functions[69] = (void *)(intptr_t)str_push_fn();
-  functions[70] = (void *)(intptr_t)str_push_fn();
-  functions[72] = (void *)(intptr_t)str_push_fn();
-  functions[73] = (void *)(intptr_t)str_push_fn();
-  functions[74] = (void *)(intptr_t)str_push_fn();
-  functions[75] = (void *)(intptr_t)str_push_fn();
-  functions[76] = (void *)(intptr_t)str_push_fn();
-  functions[77] = (void *)(intptr_t)str_push_fn();
-  functions[78] = (void *)(intptr_t)str_push_fn();
-  functions[79] = (void *)(intptr_t)str_push_fn();
-  functions[81] = (void *)(intptr_t)str_push_fn();
-  functions[82] = (void *)(intptr_t)str_push_fn();
-  functions[83] = (void *)(intptr_t)str_push_fn();
-  functions[84] = (void *)(intptr_t)str_push_fn();
-  functions[85] = (void *)(intptr_t)str_push_fn();
-  functions[87] = (void *)(intptr_t)str_push_fn();
-  functions[88] = (void *)(intptr_t)str_push_fn();
-  functions[90] = (void *)(intptr_t)str_push_fn();
+  for (i = 65; i <= 90; i++)
+    functions[i] = (void *)(intptr_t)str_push_fn();
 
   functions[71] = (void *)(intptr_t)get_fn;
   functions[80] = (void *)(intptr_t)put_fn;
