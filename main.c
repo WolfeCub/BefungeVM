@@ -14,6 +14,16 @@ int crow = 0, ccol = 0;
 int dim;
 int string_mode = 0;
 
+void print_grid(char *arr) {
+  int i;
+  for (i = 0; i < dim*dim; i++) {
+    printf("%c", arr[i]);
+
+    if (((i + 1) % dim) == 0)
+      printf("\n");
+  }
+}
+
 void double_list() {
   int new_dim = dim * 2;
   char *new = malloc(new_dim*new_dim);
@@ -28,7 +38,7 @@ void double_list() {
     ptr += dim;
     itr += new_dim;
   }
-   
+
   dim = new_dim;
   list = new;
 }
@@ -233,16 +243,6 @@ int process() {
   return 0;
 }
 
-void print_grid() {
-  int i;
-  for (i = 0; i < dim*dim; i++) {
-    printf("%c", list[i]);
-
-    if (((i + 1) % dim) == 0)
-      printf("\n");
-  }
-}
-
 int main(int argc, char **argv) {
   if (argc < 2)
     fprintf(stderr, "Not enough arguments");
@@ -255,7 +255,6 @@ int main(int argc, char **argv) {
   stk = malloc(sizeof(stk));
   dim = 8;
   list = malloc(dim*dim);
-  //memset(list, 'x', dim*dim);
 
   if ((fd = fopen(argv[1], "r")) == NULL) {
     perror(argv[1]);

@@ -25,6 +25,7 @@
 #define READC '~'
 #define END '@'
 #define NOOP ' '
+#define IGNORE ';'
 
 #define LEFT -99
 #define RIGHT -98
