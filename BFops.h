@@ -13,7 +13,7 @@
 #define HIF '_'
 #define VIF '|'
 #define STRING '"'
-#define PEEK ':'
+#define DUP ':'
 #define SWAP '\\'
 #define POPR '$'
 #define POPI '.'

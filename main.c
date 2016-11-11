@@ -2,17 +2,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdint.h>
 #include "stack.c"
 #include "BFops.h"
 
 #define pos(row, col) (row*dim + col)
+#define hash(x) (x-32)
 
 Stack *stk;
 char *list;
+char current;
 int current_direction = RIGHT;
 int crow = 0, ccol = 0;
 int dim;
 int string_mode = 0;
+
+int (**functions)();
 
 void print_grid(char *arr) {
   int i;
@@ -40,207 +45,340 @@ void double_list() {
   }
 
   dim = new_dim;
+  free(list);
   list = new;
 }
 
 void move() {
   if (current_direction == RIGHT) {
-    if (ccol + 1 >= dim)
-      ccol = 0;
-    else
-      ccol += 1;
+    ccol++;
+    ccol %= dim;
   }
   else if (current_direction == LEFT) {
-    if (ccol - 1 < 0)
-      ccol = dim-1;
-    else
-      ccol -= 1;
+    ccol--;
+    ccol %= dim;
   }
   else if (current_direction == UP) {
-    if (crow - 1 < 0)
-      crow = dim-1;
-    else
-      crow -= 1;
+    crow--;
+    crow %= dim;
   }
   else if (current_direction == DOWN) {
-    if (crow + 1 >= dim)
-      crow = 0;
-    else
-      crow += 1;
+    crow++;
+    crow %= dim;
   }
-} 
+}
 
-int process() {
-  char current = list[pos(crow, ccol)];
-  int a, b;
+int a, b, c;
+int add_fn() {
+  a = Stack_pop(stk);
+  b = Stack_pop(stk);
 
-  //printf("dim: %d\t", dim);
-  //printf("row: %d, col: %d\n", crow, ccol);
-  //Stack_print(stk);
-  //printf("\n");
-  //printf("%c", current);
+  Stack_push(stk, a+b);
+  move();
+  return 0;
+}
 
-  if (current == STRING) {
-    string_mode ^= 1;
-    move();
-    return 0;
-  } 
+int sub_fn() {
+  a = Stack_pop(stk);
+  b = Stack_pop(stk);
 
-  if (string_mode == 0) {
-    if (current == ADD) {
-      a = Stack_pop(stk);
-      b = Stack_pop(stk);
+  Stack_push(stk, b-a);
+  move();
+  return 0;
+}
+int mult_fn() {
+  a = Stack_pop(stk);
+  b = Stack_pop(stk);
 
-      Stack_push(stk, a+b);
-      move();
-    } else if (current == SUB) {
-      a = Stack_pop(stk);
-      b = Stack_pop(stk);
+  Stack_push(stk, a*b);
+  move();
+  return 0;
+}
+int div_fn() {
+  a = Stack_pop(stk);
+  b = Stack_pop(stk);
 
-      Stack_push(stk, b-a);
-      move();
-    } else if (current == MULT) {
-      a = Stack_pop(stk);
-      b = Stack_pop(stk);
+  Stack_push(stk, b/a);
+  move();
+  return 0;
+}
+int mod_fn() {
+  a = Stack_pop(stk);
+  b = Stack_pop(stk);
 
-      Stack_push(stk, a*b);
-      move();
-    } else if (current == DIV) {
-      a = Stack_pop(stk);
-      b = Stack_pop(stk);
+  Stack_push(stk, b%a);
+  move();
+  return 0;
+}
+int not_fn() {
+  a = Stack_pop(stk);
 
-      Stack_push(stk, b/a);
-      move();
-    } else if (current == MOD) {
-      a = Stack_pop(stk);
-      b = Stack_pop(stk);
+  if (a == 0)
+    Stack_push(stk, 1);
+  else
+    Stack_push(stk, 0);
+  move();
+  return 0;
+}
+int gt_fn() {
+  a = Stack_pop(stk);
+  b = Stack_pop(stk);
 
-      Stack_push(stk, b%a);
-      move();
-    } else if (current == NOT) {
-      a = Stack_pop(stk);
+  if (b > a)
+    Stack_push(stk, 1);
+  else
+    Stack_push(stk, 0);
 
-      if (a == 0)
-        Stack_push(stk, 1);
-      else
-        Stack_push(stk, 0);
-      move();
-    } else if (current == GT) {
-      a = Stack_pop(stk);
-      b = Stack_pop(stk);
+  move();
+  return 0;
+}
+int pcr_fn() {
+  current_direction = RIGHT;
+  move();
+  return 0;
+}
+int pcl_fn() {
+  current_direction = LEFT;
+  move();
+  return 0;
+}
+int pcu_fn() {
+  current_direction = UP;
+  move();
+  return 0;
+}
+int pcd_fn() {
+  current_direction = DOWN;
+  move();
+  return 0;
+}
+int pcrand_fn() {
+  a = 0 - ((rand() % 4) + 96);
+  current_direction = a;
+  move();
+  return 0;
+}
+int hif_fn() {
+  a = Stack_pop(stk);
 
-      if (b > a)
-        Stack_push(stk, 1);
-      else
-        Stack_push(stk, 0);
+  if (a == 0)
+    current_direction = RIGHT;
+  else
+    current_direction = LEFT;
+  move();
+  return 0;
+}
+int vif_fn() {
+  a = Stack_pop(stk);
 
-      move();
-    } else if (current == PCR) {
-      current_direction = RIGHT;
-      move();
-    } else if (current == PCL) {
-      current_direction = LEFT;
-      move();
-    } else if (current == PCU) {
-      current_direction = UP;
-      move();
-    } else if (current == PCD) {
-      current_direction = DOWN;
-      move();
-    } else if (current == PCRAND) {
-      a = 0 - ((rand() % 4) + 96);
-      current_direction = a;
-      move();
-    } else if (current == HIF) {
-      a = Stack_pop(stk);
+  if (a == 0)
+    current_direction = DOWN;
+  else
+    current_direction = UP;
+  move();
+  return 0;
+}
+int dup_fn() {
+  Stack_push(stk, Stack_peek(stk));
+  move();
+  return 0;
+}
+int swap_fn() {
+  a = Stack_pop(stk);
+  b = Stack_pop(stk);
+  Stack_push(stk, a);
+  Stack_push(stk, b);
+  move();
+  return 0;
+}
+int popr_fn() {
+  Stack_pop(stk);
+  move();
+  return 0;
+}
+int popi_fn() {
+  printf("%d", Stack_pop(stk));
+  move();
+  return 0;
+}
+int popc_fn() {
+  char ch = Stack_pop(stk);
+  printf("%c", ch);
+  move();
+  return 0;
+}
+int bridge_fn() {
+  move();
+  move();
+  return 0;
+}
+int readi_fn() {
+  scanf(" %d", &a);
+  getchar();
 
-      if (a == 0)
-        current_direction = RIGHT;
-      else
-        current_direction = LEFT;
-      move();
-    } else if (current == VIF) {
-      a = Stack_pop(stk);
+  Stack_push(stk, a);
 
-      if (a == 0)
-        current_direction = DOWN;
-      else
-        current_direction = UP;
-      move();
-    } else if (current == PEEK) {
-      Stack_push(stk, Stack_peek(stk));
-      move();
-    } else if (current == SWAP) {
-      a = Stack_pop(stk);
-      b = Stack_pop(stk);
-      Stack_push(stk, a);
-      Stack_push(stk, b);
-      move();
-    } else if (current == POPR) {
-      Stack_pop(stk);
-      move();
-    } else if (current == POPI) {
-      printf("%d", Stack_pop(stk));
-      move();
-    } else if (current == POPC) {
-      char ch = Stack_pop(stk);
-      printf("%c", ch);
-      move();
-    } else if (current == BRIDGE) {
-      move();
-      move();
-    } else if (current == GET && string_mode == 0) {
-      a = Stack_pop(stk);
-      b = Stack_pop(stk);
+  move();
+  return 0;
+}
+int readc_fn() {
+  char ch;
+  scanf(" %c", &ch);
+  getchar();
+  a = ch;
+  Stack_push(stk, a);
 
-      if (a >= dim-1 || b >= dim-1)
-        Stack_push(stk, 0);
-      else
-        Stack_push(stk, pos(b, a));
-      move();
-    } else if (current == PUT && string_mode == 0) {
-      int c;
-      a = Stack_pop(stk);
-      b = Stack_pop(stk);
-      c = Stack_pop(stk);
-
-      while (a >= dim || b >= dim)
-        double_list();
-
-      list[pos(b,a)] = c;
-      move();
-    } else if (current == READI) {
-      scanf(" %d", &a);
-      getchar();
-
-      Stack_push(stk, a);
-
-      move();
-    } else if (current == READC) {
-      char ch;
-      scanf(" %c", &ch);
-      getchar();
-      a = ch;
-      Stack_push(stk, a);
-
-      move();
-    } else if (current == NOOP) {
-      move();
-    }
-    else if (current == END) {
-      return -1;
-    } else {
-      Stack_push(stk, current-48);
-      move();
-    }
-  }
-  else if (string_mode == 1) {
+  move();
+  return 0;
+}
+int noop_fn() {
+  move();
+  return 0;
+}
+int end_fn() {
+  return -1;
+}
+int num_fn() {
+  Stack_push(stk, current-48);
+  move();
+  return 0;
+}
+int str_push_fn() {
+  if (string_mode == 1) {
     a = current;
     Stack_push(stk, a);
     move();
   }
-
   return 0;
+}
+int string_fn() {
+  string_mode ^= 1;
+  move();
+  return 0;
+}
+int get_fn() {
+  a = Stack_pop(stk);
+  b = Stack_pop(stk);
+
+  if (a >= dim-1 || b >= dim-1)
+    Stack_push(stk, 0);
+  else
+    Stack_push(stk, pos(b, a));
+
+  move();
+  return 0;
+}
+int put_fn() {
+  a = Stack_pop(stk);
+  b = Stack_pop(stk);
+  c = Stack_pop(stk);
+
+  while (a >= dim || b >= dim)
+    double_list();
+
+  list[pos(b,a)] = c;
+  move();
+  return 0;
+}
+int ignore_fn() {
+  return 0;
+}
+
+void init_functions() {
+
+  functions[0]  = (void *)(intptr_t)noop_fn;
+  functions[1]  = (void *)(intptr_t)not_fn;
+  functions[2]  = (void *)(intptr_t)string_fn;
+  functions[3]  = (void *)(intptr_t)bridge_fn;
+  functions[4]  = (void *)(intptr_t)popr_fn;
+  functions[5]  = (void *)(intptr_t)mod_fn;
+  functions[6]  = (void *)(intptr_t)readi_fn;
+  functions[10] = (void *)(intptr_t)mult_fn;
+  functions[11] = (void *)(intptr_t)add_fn;
+  functions[12] = (void *)(intptr_t)popc_fn;
+  functions[13] = (void *)(intptr_t)sub_fn;
+  functions[14] = (void *)(intptr_t)popi_fn;
+  functions[15] = (void *)(intptr_t)div_fn;
+
+  functions[16] = (void *)(intptr_t)num_fn;
+  functions[17] = (void *)(intptr_t)num_fn;
+  functions[18] = (void *)(intptr_t)num_fn;
+  functions[19] = (void *)(intptr_t)num_fn;
+  functions[20] = (void *)(intptr_t)num_fn;
+  functions[21] = (void *)(intptr_t)num_fn;
+  functions[22] = (void *)(intptr_t)num_fn;
+  functions[23] = (void *)(intptr_t)num_fn;
+  functions[24] = (void *)(intptr_t)num_fn;
+  functions[25] = (void *)(intptr_t)num_fn;
+
+  functions[26] = (void *)(intptr_t)dup_fn;
+  functions[27] = (void *)(intptr_t)ignore_fn;
+  functions[28] = (void *)(intptr_t)pcl_fn;
+  functions[30] = (void *)(intptr_t)pcr_fn;
+  functions[31] = (void *)(intptr_t)pcrand_fn;
+  functions[32] = (void *)(intptr_t)end_fn;
+
+  functions[33] = (void *)(intptr_t)str_push_fn();
+  functions[34] = (void *)(intptr_t)str_push_fn();
+  functions[35] = (void *)(intptr_t)str_push_fn();
+  functions[36] = (void *)(intptr_t)str_push_fn();
+  functions[37] = (void *)(intptr_t)str_push_fn();
+  functions[38] = (void *)(intptr_t)str_push_fn();
+  functions[39] = (void *)(intptr_t)str_push_fn();
+  functions[40] = (void *)(intptr_t)str_push_fn();
+  functions[41] = (void *)(intptr_t)str_push_fn();
+  functions[42] = (void *)(intptr_t)str_push_fn();
+  functions[43] = (void *)(intptr_t)str_push_fn();
+  functions[44] = (void *)(intptr_t)str_push_fn();
+  functions[45] = (void *)(intptr_t)str_push_fn();
+  functions[46] = (void *)(intptr_t)str_push_fn();
+  functions[47] = (void *)(intptr_t)str_push_fn();
+  functions[48] = (void *)(intptr_t)str_push_fn();
+  functions[49] = (void *)(intptr_t)str_push_fn();
+  functions[50] = (void *)(intptr_t)str_push_fn();
+  functions[51] = (void *)(intptr_t)str_push_fn();
+  functions[52] = (void *)(intptr_t)str_push_fn();
+  functions[53] = (void *)(intptr_t)str_push_fn();
+  functions[54] = (void *)(intptr_t)str_push_fn();
+  functions[55] = (void *)(intptr_t)str_push_fn();
+  functions[56] = (void *)(intptr_t)str_push_fn();
+  functions[57] = (void *)(intptr_t)str_push_fn();
+  functions[58] = (void *)(intptr_t)str_push_fn();
+  
+  functions[60] = (void *)(intptr_t)swap_fn;
+  functions[62] = (void *)(intptr_t)pcu_fn;
+  functions[63] = (void *)(intptr_t)hif_fn;
+  functions[64] = (void *)(intptr_t)gt_fn;
+
+  functions[65] = (void *)(intptr_t)str_push_fn();
+  functions[66] = (void *)(intptr_t)str_push_fn();
+  functions[67] = (void *)(intptr_t)str_push_fn();
+  functions[68] = (void *)(intptr_t)str_push_fn();
+  functions[69] = (void *)(intptr_t)str_push_fn();
+  functions[70] = (void *)(intptr_t)str_push_fn();
+  functions[72] = (void *)(intptr_t)str_push_fn();
+  functions[73] = (void *)(intptr_t)str_push_fn();
+  functions[74] = (void *)(intptr_t)str_push_fn();
+  functions[75] = (void *)(intptr_t)str_push_fn();
+  functions[76] = (void *)(intptr_t)str_push_fn();
+  functions[77] = (void *)(intptr_t)str_push_fn();
+  functions[78] = (void *)(intptr_t)str_push_fn();
+  functions[79] = (void *)(intptr_t)str_push_fn();
+  functions[81] = (void *)(intptr_t)str_push_fn();
+  functions[82] = (void *)(intptr_t)str_push_fn();
+  functions[83] = (void *)(intptr_t)str_push_fn();
+  functions[84] = (void *)(intptr_t)str_push_fn();
+  functions[85] = (void *)(intptr_t)str_push_fn();
+  functions[87] = (void *)(intptr_t)str_push_fn();
+  functions[88] = (void *)(intptr_t)str_push_fn();
+  functions[90] = (void *)(intptr_t)str_push_fn();
+
+  functions[71] = (void *)(intptr_t)get_fn;
+  functions[80] = (void *)(intptr_t)put_fn;
+  functions[86] = (void *)(intptr_t)pcd_fn;
+
+  functions[92] = (void *)(intptr_t)vif_fn;
+  functions[94] = (void *)(intptr_t)readc_fn;
 }
 
 int main(int argc, char **argv) {
@@ -255,6 +393,8 @@ int main(int argc, char **argv) {
   stk = malloc(sizeof(stk));
   dim = 8;
   list = malloc(dim*dim);
+  functions = malloc(sizeof(intptr_t)*100);
+  init_functions();
 
   if ((fd = fopen(argv[1], "r")) == NULL) {
     perror(argv[1]);
@@ -277,10 +417,17 @@ int main(int argc, char **argv) {
 
   fclose(fd);
   free(line);
-
-  int val = process();
-  while (val == 0)
-    val = process();
+  
+  int val = 0;
+  while (val == 0) {
+    current = list[pos(crow, ccol)];
+    while (string_mode == 1 && current != '"') {
+      str_push_fn();
+      current = list[pos(crow, ccol)];
+    }
+      
+    val = functions[hash(current)]();
+  }
 
   return 0;
 }
