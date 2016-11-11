@@ -197,13 +197,13 @@ int popr_fn() {
   return 0;
 }
 int popi_fn() {
-  printf("%d", Stack_pop(stk));
+  printf("%d ", Stack_pop(stk));
   move();
   return 0;
 }
 int popc_fn() {
   char ch = Stack_pop(stk);
-  printf("%c", ch);
+  printf("%c ", ch);
   move();
   return 0;
 }
@@ -263,7 +263,7 @@ int get_fn() {
   if (a >= dim-1 || b >= dim-1)
     Stack_push(stk, 0);
   else
-    Stack_push(stk, pos(b, a));
+    Stack_push(stk, list[pos(a, b)]);
 
   move();
   return 0;
@@ -276,7 +276,7 @@ int put_fn() {
   while (a >= dim || b >= dim)
     double_list();
 
-  list[pos(b,a)] = c;
+  list[pos(a,b)] = (char)c;
   move();
   return 0;
 }
@@ -429,5 +429,6 @@ int main(int argc, char **argv) {
     val = functions[hash(current)]();
   }
 
+  printf("\n");
   return 0;
 }
