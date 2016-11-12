@@ -1,0 +1,32 @@
+* Befunge VM
+  Befunge is a language created by Chris Pressey to be as difficult as possible to compile. It is a 2D reflective programming language.
+  While creating a compiler may be intentially complicated a Befunge VM is reasonably simple to implement. This program is a very simple
+  implementation. The main difference between this interpreter and standard interpreters is the grid is dynamically allocated rather than
+  using a fixed size grid.
+  
+** Code examples
+
+   Hello world
+#+BEGIN_SRC
+64+"!dlroW ,olleH">:#,_@
+#+END_SRC
+
+   Factorial
+#+BEGIN_SRC
+&>:1-:v v *_$.@ 
+ ^    _$>\:^
+#+END_SRC
+
+   Sieve of Eratosthenes
+#+BEGIN_SRC
+2>:3g" "-!v\  g30          <
+ |!`"O":+1_:.:03p>03g+:"O"`|
+ @               ^  p3\" ":<
+2 234567890123456789012345678901234567890123456789012345678901234567890123456789
+#+END_SRC
+
+   Quine
+#+BEGIN_SRC
+01->1# +# :# 0# g# ,# :# 5# 8# *# 4# +# -# _@
+#+END_SRC
+   For more examples look [[http://esolangs.org/wiki/Befunge][here]].
