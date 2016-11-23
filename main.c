@@ -6,7 +6,7 @@
 #include "stack.c"
 #include "BFops.h"
 
-#define pos(row, col) (row*dim + col)
+#define pos(row, col) ((row)*dim + (col))
 #define hash(x) (x-32)
 
 Stack *stk;
