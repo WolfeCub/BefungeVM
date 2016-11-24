@@ -15,7 +15,6 @@ char current;
 int current_direction = RIGHT;
 int crow = 0, ccol = 0;
 int dim;
-int string_mode = 0;
 
 int (**functions)();
 
@@ -244,18 +243,20 @@ int num_fn() {
   return 0;
 }
 int str_push_fn() {
-  if (string_mode == 1) {
-    a = current;
-    Stack_push(stk, a);
-    move();
-  }
-  return 0;
-}
-int string_fn() {
-  string_mode ^= 1;
+  a = current;
+  Stack_push(stk, a);
   move();
   return 0;
 }
+int string_fn() {
+  move();
+  while ((current = list[pos(crow, ccol)]) != '"') {
+    str_push_fn();
+  }
+  move();
+  return 0;
+}
+
 int get_fn() {
   a = Stack_pop(stk);
   b = Stack_pop(stk);
@@ -311,16 +312,16 @@ void init_functions() {
   functions[31] = (void *)(intptr_t)pcrand_fn;
   functions[32] = (void *)(intptr_t)end_fn;
 
-  for (i = 33; i <= 58; i++)
-    functions[i] = (void *)(intptr_t)str_push_fn();
+  //for (i = 33; i <= 58; i++)
+  //  functions[i] = (void *)(intptr_t)str_push_fn();
   
   functions[60] = (void *)(intptr_t)swap_fn;
   functions[62] = (void *)(intptr_t)pcu_fn;
   functions[63] = (void *)(intptr_t)hif_fn;
   functions[64] = (void *)(intptr_t)gt_fn;
 
-  for (i = 65; i <= 90; i++)
-    functions[i] = (void *)(intptr_t)str_push_fn();
+  //for (i = 65; i <= 90; i++)
+  //  functions[i] = (void *)(intptr_t)str_push_fn();
 
   functions[71] = (void *)(intptr_t)get_fn;
   functions[80] = (void *)(intptr_t)put_fn;
@@ -370,11 +371,6 @@ int main(int argc, char **argv) {
   int val = 0;
   while (val == 0) {
     current = list[pos(crow, ccol)];
-    while (string_mode == 1 && current != '"') {
-      str_push_fn();
-      current = list[pos(crow, ccol)];
-    }
-      
     val = functions[hash(current)]();
   }
 
