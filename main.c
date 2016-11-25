@@ -294,6 +294,13 @@ int ignore_fn() {
   return 0;
 }
 
+int letter_num_fn() {
+  a = current;
+  Stack_push(stk, a - 87);
+  move();
+  return 0;
+}
+
 void init_functions() {
   int i;
 
@@ -355,33 +362,33 @@ void init_functions() {
   functions[63] = (void *)hif_fn;
   functions[64] = (void *)gt_fn;
 
-  // Lowercase
-  functions[65] = (void *)str_push_fn;
-  functions[66] = (void *)str_push_fn;
-  functions[67] = (void *)str_push_fn;
-  functions[68] = (void *)str_push_fn;
-  functions[69] = (void *)str_push_fn;
-  functions[70] = (void *)str_push_fn;
-  //functions[71] = (void *)str_push_fn;
-  functions[72] = (void *)str_push_fn;
-  functions[73] = (void *)str_push_fn;
-  functions[74] = (void *)str_push_fn;
-  functions[75] = (void *)str_push_fn;
-  functions[76] = (void *)str_push_fn;
-  functions[77] = (void *)str_push_fn;
-  functions[78] = (void *)str_push_fn;
-  functions[79] = (void *)str_push_fn;
+  // Lowercase a-f
+  functions[65] = (void *)letter_num_fn;
+  functions[66] = (void *)letter_num_fn;
+  functions[67] = (void *)letter_num_fn;
+  functions[68] = (void *)letter_num_fn;
+  functions[69] = (void *)letter_num_fn;
+  functions[70] = (void *)letter_num_fn;
+
+  // Lowercase h onwards
+  //functions[72] = (void *)str_push_fn;
+  //functions[73] = (void *)str_push_fn;
+  //functions[74] = (void *)str_push_fn;
+  //functions[75] = (void *)str_push_fn;
+  //functions[76] = (void *)str_push_fn;
+  //functions[77] = (void *)str_push_fn;
+  //functions[78] = (void *)str_push_fn;
+  //functions[79] = (void *)str_push_fn;
   //functions[80] = (void *)str_push_fn;
-  functions[81] = (void *)str_push_fn;
-  functions[82] = (void *)str_push_fn;
-  functions[83] = (void *)str_push_fn;
-  functions[84] = (void *)str_push_fn;
-  functions[85] = (void *)str_push_fn;
-  functions[86] = (void *)str_push_fn;
-  functions[87] = (void *)str_push_fn;
-  functions[88] = (void *)str_push_fn;
-  functions[89] = (void *)str_push_fn;
-  functions[90] = (void *)str_push_fn;
+  //functions[81] = (void *)str_push_fn;
+  //functions[82] = (void *)str_push_fn;
+  //functions[83] = (void *)str_push_fn;
+  //functions[84] = (void *)str_push_fn;
+  //functions[85] = (void *)str_push_fn;
+  //functions[87] = (void *)str_push_fn;
+  //functions[88] = (void *)str_push_fn;
+  //functions[89] = (void *)str_push_fn;
+  //functions[90] = (void *)str_push_fn;
 
   functions[71] = (void *)get_fn;
   functions[80] = (void *)put_fn;
@@ -431,6 +438,8 @@ int main(int argc, char **argv) {
   int val = 0;
   while (val == 0) {
     current = list[pos(crow, ccol)];
+    //Stack_print(stk);
+    //printf("%c  ", current);
     val = functions[hash(current)]();
   }
 
