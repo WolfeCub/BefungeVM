@@ -51,19 +51,23 @@ void double_list() {
 void move() {
   if (current_direction == RIGHT) {
     ccol++;
-    ccol %= dim;
+    if (ccol >= dim)
+      ccol = 0;
   }
   else if (current_direction == LEFT) {
     ccol--;
-    ccol %= dim;
+    if (ccol < 0)
+      ccol = dim-1;
   }
   else if (current_direction == UP) {
     crow--;
-    crow %= dim;
+    if (crow < 0)
+      crow = dim-1;
   }
   else if (current_direction == DOWN) {
     crow++;
-    crow %= dim;
+    if (crow >= dim)
+      crow = 0;
   }
 }
 
@@ -282,6 +286,11 @@ int put_fn() {
   return 0;
 }
 int ignore_fn() {
+  move();
+  while ((current = list[pos(crow, ccol)]) != ';') {
+    move();
+  }
+  move();
   return 0;
 }
 
