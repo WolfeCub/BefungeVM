@@ -16,7 +16,7 @@ int current_direction = RIGHT;
 int crow = 0, ccol = 0;
 int dim;
 
-int (**functions)();
+intptr_t (**functions)();
 
 void print_grid(char *arr) {
   int i;
@@ -297,47 +297,98 @@ int ignore_fn() {
 void init_functions() {
   int i;
 
-  functions[0]  = (void *)(intptr_t)noop_fn;
-  functions[1]  = (void *)(intptr_t)not_fn;
-  functions[2]  = (void *)(intptr_t)string_fn;
-  functions[3]  = (void *)(intptr_t)bridge_fn;
-  functions[4]  = (void *)(intptr_t)popr_fn;
-  functions[5]  = (void *)(intptr_t)mod_fn;
-  functions[6]  = (void *)(intptr_t)readi_fn;
-  functions[10] = (void *)(intptr_t)mult_fn;
-  functions[11] = (void *)(intptr_t)add_fn;
-  functions[12] = (void *)(intptr_t)popc_fn;
-  functions[13] = (void *)(intptr_t)sub_fn;
-  functions[14] = (void *)(intptr_t)popi_fn;
-  functions[15] = (void *)(intptr_t)div_fn;
+  functions[0]  = (void *)noop_fn;
+  functions[1]  = (void *)not_fn;
+  functions[2]  = (void *)string_fn;
+  functions[3]  = (void *)bridge_fn;
+  functions[4]  = (void *)popr_fn;
+  functions[5]  = (void *)mod_fn;
+  functions[6]  = (void *)readi_fn;
+  functions[10] = (void *)mult_fn;
+  functions[11] = (void *)add_fn;
+  functions[12] = (void *)popc_fn;
+  functions[13] = (void *)sub_fn;
+  functions[14] = (void *)popi_fn;
+  functions[15] = (void *)div_fn;
 
-  for (i = 16; i <= 25; i++)
-    functions[i] = (void *)(intptr_t)num_fn;
+  for (i = 16; i <= 25; i++) {
+    functions[i] = (void *)num_fn;
+  }
 
-  functions[26] = (void *)(intptr_t)dup_fn;
-  functions[27] = (void *)(intptr_t)ignore_fn;
-  functions[28] = (void *)(intptr_t)pcl_fn;
-  functions[30] = (void *)(intptr_t)pcr_fn;
-  functions[31] = (void *)(intptr_t)pcrand_fn;
-  functions[32] = (void *)(intptr_t)end_fn;
+  functions[26] = (void *)dup_fn;
+  functions[27] = (void *)ignore_fn;
+  functions[28] = (void *)pcl_fn;
+  functions[30] = (void *)pcr_fn;
+  functions[31] = (void *)pcrand_fn;
+  functions[32] = (void *)end_fn;
 
-  //for (i = 33; i <= 58; i++)
-  //  functions[i] = (void *)(intptr_t)str_push_fn();
+  // Uppercase Letters
+  functions[33] = (void *)str_push_fn;
+  functions[34] = (void *)str_push_fn;
+  functions[35] = (void *)str_push_fn;
+  functions[36] = (void *)str_push_fn;
+  functions[37] = (void *)str_push_fn;
+  functions[38] = (void *)str_push_fn;
+  functions[39] = (void *)str_push_fn;
+  functions[40] = (void *)str_push_fn;
+  functions[41] = (void *)str_push_fn;
+  functions[42] = (void *)str_push_fn;
+  functions[43] = (void *)str_push_fn;
+  functions[44] = (void *)str_push_fn;
+  functions[45] = (void *)str_push_fn;
+  functions[46] = (void *)str_push_fn;
+  functions[47] = (void *)str_push_fn;
+  functions[48] = (void *)str_push_fn;
+  functions[49] = (void *)str_push_fn;
+  functions[50] = (void *)str_push_fn;
+  functions[51] = (void *)str_push_fn;
+  functions[52] = (void *)str_push_fn;
+  functions[53] = (void *)str_push_fn;
+  functions[54] = (void *)str_push_fn;
+  functions[55] = (void *)str_push_fn;
+  functions[56] = (void *)str_push_fn;
+  functions[57] = (void *)str_push_fn;
+  functions[58] = (void *)str_push_fn;
   
-  functions[60] = (void *)(intptr_t)swap_fn;
-  functions[62] = (void *)(intptr_t)pcu_fn;
-  functions[63] = (void *)(intptr_t)hif_fn;
-  functions[64] = (void *)(intptr_t)gt_fn;
+  functions[60] = (void *)swap_fn;
+  functions[62] = (void *)pcu_fn;
+  functions[63] = (void *)hif_fn;
+  functions[64] = (void *)gt_fn;
 
-  //for (i = 65; i <= 90; i++)
-  //  functions[i] = (void *)(intptr_t)str_push_fn();
+  // Lowercase
+  functions[65] = (void *)str_push_fn;
+  functions[66] = (void *)str_push_fn;
+  functions[67] = (void *)str_push_fn;
+  functions[68] = (void *)str_push_fn;
+  functions[69] = (void *)str_push_fn;
+  functions[70] = (void *)str_push_fn;
+  //functions[71] = (void *)str_push_fn;
+  functions[72] = (void *)str_push_fn;
+  functions[73] = (void *)str_push_fn;
+  functions[74] = (void *)str_push_fn;
+  functions[75] = (void *)str_push_fn;
+  functions[76] = (void *)str_push_fn;
+  functions[77] = (void *)str_push_fn;
+  functions[78] = (void *)str_push_fn;
+  functions[79] = (void *)str_push_fn;
+  //functions[80] = (void *)str_push_fn;
+  functions[81] = (void *)str_push_fn;
+  functions[82] = (void *)str_push_fn;
+  functions[83] = (void *)str_push_fn;
+  functions[84] = (void *)str_push_fn;
+  functions[85] = (void *)str_push_fn;
+  functions[86] = (void *)str_push_fn;
+  functions[87] = (void *)str_push_fn;
+  functions[88] = (void *)str_push_fn;
+  functions[89] = (void *)str_push_fn;
+  functions[90] = (void *)str_push_fn;
 
-  functions[71] = (void *)(intptr_t)get_fn;
-  functions[80] = (void *)(intptr_t)put_fn;
-  functions[86] = (void *)(intptr_t)pcd_fn;
+  functions[71] = (void *)get_fn;
+  functions[80] = (void *)put_fn;
+  functions[86] = (void *)pcd_fn;
 
-  functions[92] = (void *)(intptr_t)vif_fn;
-  functions[94] = (void *)(intptr_t)readc_fn;
+  functions[92] = (void *)vif_fn;
+  functions[94] = (void *)readc_fn;
 }
 
 int main(int argc, char **argv) {
