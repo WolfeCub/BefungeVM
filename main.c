@@ -402,6 +402,7 @@ int main(int argc, char **argv) {
   if (argc < 2)
     fprintf(stderr, "Not enough arguments");
 
+  int i, val;
   char *line = NULL;
   size_t len = 0;
   ssize_t read;
@@ -418,7 +419,7 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  int i = 0;
+  i = 0;
   while ((read = getline(&line, &len, fd)) != -1) {
     if (line[read-1] == '\n') {
       line[read-1] = '\0';
@@ -435,7 +436,7 @@ int main(int argc, char **argv) {
   fclose(fd);
   free(line);
   
-  int val = 0;
+  val = 0;
   while (val == 0) {
     current = list[pos(crow, ccol)];
     //Stack_print(stk);
