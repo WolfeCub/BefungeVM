@@ -7,7 +7,7 @@
 #include "BFops.h"
 
 #define pos(row, col) ((row)*dim + (col))
-#define hash(x) (x-32)
+#define hash(x) ((x)-32)
 
 Stack *stk;
 char *list;
