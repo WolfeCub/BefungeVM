@@ -399,8 +399,10 @@ void init_functions() {
 }
 
 int main(int argc, char **argv) {
-  if (argc < 2)
-    fprintf(stderr, "Not enough arguments");
+  if (argc < 2) {
+    fprintf(stderr, "Not enough arguments\n");
+    return 1;
+  }
 
   int i, val;
   char *line = NULL;
